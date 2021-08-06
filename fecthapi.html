@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>pokemon api</title>
+</head>
+<body>
+	<ul border="1px" id="n">
+		<h3>Daftar Pokemon</h3>
+		<a>Nama</a>
+		<span style="margin-left: 90px">Detail</span>
+	</ul>
+
+	<ul style="margin-left: 150px; margin-top: -415px" id="x">
+		
+	</ul>
+	<script type="text/javascript">
+		fetch('https://pokeapi.co/api/v2/pokemon')
+		.then(
+			function(response){
+				if(response.status !=200){
+					console.info(`ops...${response.status}`);
+					return;
+				}
+				response.json().then(function(data){
+					const poke = data.results;
+					for (let pokemon of poke){
+						document.getElementById('n').insertAdjacentHTML('beforeEnd',
+							`<li onclick='(detail("${pokemon.url}"))'>${pokemon.name}</li>`)
+					}
+
+				})
+			}
+		)
+		.catch(function(err){
+			console.info(err);
+			return;
+		})
+
+		function detail(url){
+			fetch(url).then(function(response){
+				response.json().then(function(pokemon){
+					const poke = pokemon.moves;
+					document.getElementById('x').innerHTML='';
+					document.getElementById('x').insertAdjacentHTML('beforeEnd', 
+							`<h3>${pokemon.name}</h3>
+							<img src='${pokemon.sprites.front_default}'><img>
+							<p>Tinggi : ${pokemon.height} cm</p>
+							<p>Berat : ${pokemon.weight} kg</p>
+							Jurus :`);
+					for(let movePokemon of poke){
+						document.getElementById('x').insertAdjacentHTML('beforeEnd', `<span>${movePokemon.move.name}, <span>`);
+					
+				}
+
+				})
+			})
+		}
+	</script>
+
+</body>
+</html>
